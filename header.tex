@@ -1,0 +1,348 @@
+%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{dsfont}
+\usepackage{cases}
+\usepackage{nicefrac}
+%
+\usepackage{bbding}
+\usepackage{pifont}
+
+%
+\usepackage[utf8]{inputenc} %
+\usepackage[T1]{fontenc}    %
+\usepackage{textcomp}
+
+%
+\usepackage{etoc}  %
+
+%
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}     %
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{makecell}
+\usepackage{colortbl}
+
+%
+\usepackage{xr-hyper}
+\usepackage{hyperref}       %
+\usepackage[capitalise]{cleveref}
+\crefname{equation}{}{}
+\crefname{figure}{Fig.}{Figs.}
+\crefname{section}{Sec.}{Secs.}
+\crefname{appendix}{App.}{Apps.}
+\crefname{table}{Tab.}{Tabs.}
+\usepackage{url}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, matrix} 
+
+\usepackage[makeroom]{cancel}
+
+%
+%
+%
+%
+%
+%
+%
+
+\hypersetup{
+  final,
+  colorlinks,
+  linkcolor=ourred,
+  citecolor=ourblue,
+  urlcolor=url,
+}
+
+%
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%
+%
+
+%
+\usepackage[page,toc,titletoc,title]{appendix}
+\usepackage{microtype}
+\usepackage{xargs}
+\usepackage{xspace}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+\usepackage{fancyvrb}
+
+%
+\usepackage{lipsum}
+\usepackage{blindtext}
+
+%
+\usepackage{xcolor}
+\definecolor{ourblue}{rgb}{0.368,0.507,0.71}
+\definecolor{ourorange}{rgb}{0.881,0.611,0.142}
+\definecolor{ourgreen}{rgb}{0.56,0.692,0.195}
+\definecolor{ourgreen2}{rgb}{0.46,0.792,0.195}
+\definecolor{ourred}{rgb}{0.923,0.386,0.209}
+\definecolor{ourviolet}{rgb}{0.528,0.471,0.701}
+\definecolor{ourbrown}{rgb}{0.772,0.432,0.102}
+\definecolor{ourlightblue}{rgb}{0.364,0.619,0.782}
+\definecolor{ourbrightblue}{RGB}{93,135,237}
+\definecolor{ourdarkgreen}{rgb}{0.572,0.586,0.}
+
+\definecolor{ourcyan2}{rgb}{0.125,0.722,0.804}
+\definecolor{ourred2}{rgb}{0.863,0.184,0.047}
+\definecolor{ouryellow2}{cmyk}{0,0.16,1.0,0.07}
+\definecolor{ourviolet2}{cmyk}{0.55,0.56,0,0.47}
+\definecolor{ourorange2}{cmyk}{0,0.46,0.89,0.11}
+\definecolor{grayseq}{RGB}{120,120,120}
+
+\definecolor{discretecolor}{RGB}{11,83,150}
+\definecolor{gaussiancolor}{RGB}{230,145,56}
+\definecolor{argmaxcolor}{RGB}{154,0,0}
+
+\definecolor{customred}{RGB}{169, 45, 59}
+\definecolor{url}{HTML}{d95225}
+
+\definecolor{olivegreen}{RGB}{165,185,115}
+\definecolor{olivegreendark}{RGB}{145,165,95}
+
+\definecolor{maroon}{RGB}{140, 45, 45}
+
+\usepackage[most]{tcolorbox} %
+\usepackage{soul}
+\newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
+\newcommand{\hlfancy}[2]{\sethlcolor{#1}\hl{#2}}
+
+%
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+\def\eg{e.g\onedot}
+\def\ie{i.e\onedot}
+\def\cf{cf\onedot}
+\def\etc{etc\onedot}
+\def\wrt{w.r.t\onedot}
+\makeatother
+
+\newcommand{\Real}{\ensuremath{\mathbb R}}        %
+\newcommand{\Unit}{\ensuremath{\mathbb I}}        %
+\newcommand{\T}{\ensuremath{\top}}                %
+\newcommand{\bfI}{\mathbf{I}}
+
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+
+\newtcolorbox{corollarybox}{
+  breakable,
+  enhanced,
+  colback=ourbrightblue!12,
+  colframe=ourbrightblue!80!black,
+  left=1pt,
+  right=1pt,
+  top=1pt,
+  bottom=1pt,
+  boxrule=1pt
+}
+
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\newtcolorbox[auto counter]{findingbox}[1][]{
+  breakable,
+  enhanced,
+  colback=ourbrightblue!8,
+  colframe=ourbrightblue!80!black,
+  left=2pt,
+  right=2pt,
+  top=1pt,
+  bottom=1pt,
+  boxrule=1pt,
+  before skip=0.7em,
+  after skip=0.7em,
+  before upper={\textbf{Finding~\thetcbcounter: } },
+  #1
+}
+
+\newtcolorbox{samplebox}[1][]{
+  breakable,
+  enhanced,
+  colback=ourorange!6,
+  colframe=ourorange!75!black,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  boxrule=0.6pt,
+  arc=2.5pt,
+  fonttitle=\bfseries\small,
+  coltitle=black,
+  colbacktitle=ourorange!22,
+  attach boxed title to top left={yshift=-2.5mm, xshift=5mm},
+  boxed title style={size=small, sharp corners=all, boxrule=0.3pt, arc=2pt, colframe=ourorange!75!black},
+  fontupper=\small,
+  title=Sample,
+  #1
+}
+
+\newcommand{\zhihan}[1]{\textcolor{blue}{[zhihan: #1]}}
+\newcommand{\subham}[1]{\textcolor{red}{[subham: #1]}}
+\newcommand{\yongxin}[1]{\textcolor{cyan}{[yongxin: #1]}}
+\newcommand{\wei}[1]{\textcolor{orange}{[wei: #1]}}
+\newcommand{\av}[1]{\textcolor{teal}{[av: #1]}}
+\definecolor{justingreen}{rgb}{0.0078, 0.4431, 0.2823}
+\newcommand{\justin}[1]{\textcolor{justingreen}{[justin: #1]}}
+\newcommand{\Morteza}[1]{\textcolor{purple}{{\bf Morteza:}  #1}}
+\newcommand{\john}[1]{\textcolor{magenta}{{\bf John:}  #1}}
+
+\def\method{Eso-LMs}
+\def\methoda{Eso-LMs (A)}
+\def\methodbsingular{Eso-LM}
+\def\methodb{Eso-LMs}
+\def\model{DiTA}
+
+\usepackage{pifont}
+\newcommand{\cmark}{\textcolor{green!70!black}{\ding{51}}}
+\newcommand{\ccross}{\textcolor{red!70!black}{\ding{55}}}
+
+
+%
+%
+
+%
+%
+%
+%
+
+\definecolor{topone}{RGB}{112, 149, 239}   %
+\definecolor{toptwo}{RGB}{174, 195, 246}   %
+\definecolor{topthree}{RGB}{223, 231, 251} %
+
+\newcommand{\topone}[1]{\cellcolor{topone}#1}
+\newcommand{\toptwo}[1]{\cellcolor{toptwo}#1}
+\newcommand{\topthree}[1]{\cellcolor{topthree}#1}
+
+%
+\usepackage{arydshln}
+
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+\newtheorem{theorem}{Theorem}
+\crefname{theorem}{Thm.}{Thms.}
+\newtheorem{lemma}{Lemma}
+\crefname{lemma}{Lem.}{Lems.}
+\newtheorem{assumption}{Assumption}
+\crefname{assumption}{Assump.}{Assumps.}
+\newtheorem{proposition}{Proposition}
+\crefname{proposition}{Prop.}{Props.}
+\newtheorem{corollary}{Corollary}
+\crefname{corollary}{Cor.}{Cors.}
+\newtheorem{definition}{Definition}
+\crefname{definition}{Def.}{Defs.}
+\newtheorem{remark}{Remark}
+\crefname{remark}{Rmk.}{Rmks.}
+\crefname{algocf}{Alg.}{Algs.}
+\crefname{algorithm}{Alg.}{Algs.}
+
+\newenvironment{sketchofproof}{%
+  \renewcommand{\qedsymbol}{}%
+  \begin{proof}[Sketch of proof]%
+}{%
+  \end{proof}%
+}
+
+\usepackage{titlesec}
+
+%
+
+%
+\titlespacing*{\section}{0pt}{0.5\baselineskip}{0.2\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.3\baselineskip}{0.1\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{0.2\baselineskip}{0.1\baselineskip}
+
+\newcommand{\replaidscx}{20}
+\newcommand{\replaidnscx}{27}
+
+\newcommand{\replaidscppl}{22.1}
+\newcommand{\replaidnscppl}{23.6}
+\usepackage{minted}
+% \usepackage{xcolor}
+\usemintedstyle{friendly}
+%
+%
+%
+%
+
+%
+%
+%
+%
+
+\usepackage{listings}
+
+% 2. Create a custom syntax highlighter
+% 1. Define the exact colors from your first screenshot
+\definecolor{elfcomment}{HTML}{3B9C9C} % Teal
+\definecolor{elfblue}{HTML}{1A237E}    % Deep Blue
+\definecolor{elfmagenta}{HTML}{C2185B} % Magenta/Pink
+\definecolor{elforange}{HTML}{E65100}  % Orange
+
+% 2. Create a custom syntax highlighter
+\lstdefinelanguage{ELF}{
+    language=Python,
+    basicstyle=\ttfamily\small\color{black},
+    commentstyle=\color{elfcomment},
+    stringstyle=\color{elforange},
+    columns=fullflexible,                  % <-- ADD THIS LINE
+    keepspaces=true,                       % <-- ADD THIS LINE
+    showstringspaces=false,
+    % Keywords (Blue)
+    keywordstyle=[1]\color{elfblue},
+    morekeywords=[1]{if, else, for, in, range, len},
+    % Custom Functions (Magenta)
+    keywordstyle=[2]\color{elfmagenta},
+    morekeywords=[2]{encode, uniform, sample_t, randn_like, net, mse_loss, corrupt, unembed, ce_loss, randn, argmax, adaptive_bs, gamma_tilde_net, gamma_bounds, sqrt, sigmoid, prior_loss},
+    % Operators (Blue)
+    % Note: The (t = 1) rule protects your comment from turning blue!
+    literate=
+     *{=}{{\textcolor{elfblue}{=}}}{1}
+      {+}{{\textcolor{elfblue}{+}}}{1}
+      {-}{{\textcolor{elfblue}{-}}}{1}
+      {<}{{\textcolor{elfblue}{<}}}{1}
+      {*}{{\textcolor{elfblue}{*}}}{1}
+      {/}{{\textcolor{elfblue}{/}}}{1}
+      {(t = 1)}{{\textcolor{elfcomment}{(t = 1)}}}{7}, 
+}
