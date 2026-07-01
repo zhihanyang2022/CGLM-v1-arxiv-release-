@@ -1028,7 +1028,7 @@ where $k$ controls the strength of sharpening (higher $k$: more sharpening) and 
 \begin{table}[h]
   \centering
   \small
-  \caption{\small \textbf{Mathematical reasoning}. We prompt 0.1B models trained for 250K steps on TinyGSM~\citep{liu2023tinygsm} using the GSM8K~\citep{cobbe2021gsm8k} test set. We use $\text{max response length}=512 - \text{prompt length}$ and pass@1. The AR, MDLM, Duo, and FLM numbers are obtained from the official checkpoints of concurrent work \citet{deschenaux2026language}. The code responses are evaluated by a Python interpreter. Diffusion uses ancestral sampling with $T=1024$. Logit temperature: dividing the logits of $\x_\theta(\z_t, t)$ by $\tau$ before the softmax; score temperature: rescaling the predicted noise $\beps_\theta(\z_t, t)$ (equivalently the diffusion score) by $1/\tau$, following~\citet{dieleman2022continuous}. For both, $\tau<1$ sharpens. ``N.A.'' marks methods without a score interface. The three best values across all methods (excluding AR and self-conditioned runs) are \textbf{shaded}.}
+  \caption{\small \textbf{Mathematical reasoning}. We prompt 0.1B models trained for 250K steps on TinyGSM~\citep{liu2023tinygsm} using the GSM8K~\citep{cobbe2021gsm8k} test set. We use $\text{max response length}=512 - \text{prompt length}$ and pass@1. The AR, MDLM, Duo, and FLM numbers are obtained from the official checkpoints of concurrent work \citet{deschenaux2026language}. The code responses are evaluated by a Python interpreter. Diffusion uses ancestral sampling with $T=1024$. Logit temperature: dividing the logits of $\x_\theta(\z_t, t)$ by $\tau$ before the softmax; score temperature: rescaling the predicted noise $\beps_\theta(\z_t, t)$ (equivalently the diffusion score) by $1/\tau$, following~\citet{dieleman2022continuous}. For both, $\tau<1$ sharpens. ``N.A.'' marks methods without a score interface. The five best values across all methods (excluding AR) are \textbf{shaded}, from darkest (best) to lightest.}
   \label{tab:tinygsm}
    \scriptsize
   \begin{tabular}{llccccc}
@@ -1041,15 +1041,15 @@ where $k$ controls the strength of sharpening (higher $k$: more sharpening) and 
     & Transformer & $52.9$ & $64.4$ ($0.2$) & N.A. \\
     \midrule
     \multicolumn{2}{l}{\textit{Discrete Diffusion}} \\
-    & MDLM~\citep{sahoo2024simple} & $17.0$ & $35.6$ ($0.1$) & N.A. & $37.0$ ($0.8$) & \topone{$\mathbf{40.3}$} \\
+    & MDLM~\citep{sahoo2024simple} & $17.0$ & $35.6$ ($0.1$) & N.A. & $37.0$ ($0.8$) & \rankthree{$\mathbf{40.3}$} \\
     & Duo~\citep{sahoo2025the} & $18.6$ & $37.2$ ($0.1$) & N.A. \\
     \midrule
     \multicolumn{2}{l}{\textit{Continuous Diffusion}} \\
     & FLM~\citep{lee2026flow} & $0.3$ & -- & -- \\
-    & \textbf{\textsc{RePlaid} (no s.c.) (Ours)}, DDPM & $13.3$ & $20.0$ ($0.05$) & \topthree{$40.0$} ($0.05$) \\
-    & \textbf{\textsc{RePlaid} (no s.c.) (Ours)}, DDIM & $9.6$ & $16.8$ ($0.5$) & \toptwo{$\mathbf{40.1}$} ($0.01$) \\
-    & \textbf{\textsc{RePlaid} (s.c.) (Ours)}, DDPM & $33.2$ & $38.8$ ($0.0001$) & $49.0$ ($0.01$) \\
-    & \textbf{\textsc{RePlaid} (s.c.) (Ours)}, DDIM & $26.8$ & $31.2$ ($0.3$) & $48.4$ ($0.01$) \\
+    & \textbf{\textsc{RePlaid} (no s.c.) (Ours)}, DDPM & $13.3$ & $20.0$ ($0.05$) & \rankfive{$40.0$} ($0.05$) \\
+    & \textbf{\textsc{RePlaid} (no s.c.) (Ours)}, DDIM & $9.6$ & $16.8$ ($0.5$) & \rankfour{$\mathbf{40.1}$} ($0.01$) \\
+    & \textbf{\textsc{RePlaid} (s.c.) (Ours)}, DDPM & $33.2$ & $38.8$ ($0.0001$) & \rankone{$49.0$} ($0.01$) \\
+    & \textbf{\textsc{RePlaid} (s.c.) (Ours)}, DDIM & $26.8$ & $31.2$ ($0.3$) & \ranktwo{$48.4$} ($0.01$) \\
     \bottomrule
   \end{tabular}
   \vspace{-0.5em}
