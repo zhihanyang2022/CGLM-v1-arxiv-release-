@@ -434,12 +434,7 @@ With prior $p(\z_1)=\normal(\zero,\I)$, this yields the Negative Evidence Lower 
 & -\tfrac{1}{2}\ \E_{t\sim\unif[0,1], \z_t\sim q(\z_t \mid \x)}[\SNR'(t) \| \e_\theta(\z_t, t) - \e \|^2], \label{eq:plaid-nelbo}
 \end{align}
 %
-where $\e_\theta(\z_t, t):=\x_\theta(\z_t, t) \Emb$ is the predicted clean embedding, and $\langle\cdot,\cdot\rangle$ denotes the inner product. During training, Plaid adaptively allocates a fraction of each batch to the reconstruction loss (Monte Carlo over $\z_0$) and the remainder to the diffusion loss (Monte Carlo over $t$ and $\z_t$); the prior loss uses the whole batch. See~\cref{supp:sec:training-algo} for the training algorithm.
-
-%
-
-%
-%
+where $\e_\theta(\z_t, t):=\x_\theta(\z_t, t) \Emb$ is the predicted clean embedding, and $\langle\cdot,\cdot\rangle$ denotes the inner product. Crucially, the NELBO depends on $\Emb$, which justifies jointly learning $\Emb$ and the denoising model to optimize likelihood. During training, Plaid adaptively allocates a fraction of each batch to the reconstruction loss (Monte Carlo over $\z_0$) and the remainder to the diffusion loss (Monte Carlo over $t$ and $\z_t$); the prior loss uses the whole batch. See~\cref{supp:sec:training-algo} for the training algorithm.
 
 \paragraph{Learnable noise schedule.} Plaid inherits the VDM parameterization~\citep{kingma2021variational} of the noise schedule $\gamma(t)=\gamma_0+(\gamma_1-\gamma_0)\tilde{\gamma}(t)$, with learnable scalar \textit{endpoints} $\gamma_0<\gamma_1$ and \textit{interior shape} $\tilde{\gamma}:[0,1]\rightarrow[0,1]$ modeled by a monotonically increasing neural net. This gives $\alpha^2_t = \sigmoid(-\gamma(t))$, $\sigma^2_t = \sigmoid(\gamma(t))$, and $\SNR(t) = \ee^{-\gamma(t)}$. The endpoints and interior shape are trained to minimize the diffusion loss and its Monte-Carlo variance respectively (\cref{fig:diffusion-loss-code} for pseudo-code). As with VDMs, $\gamma_0$ and $\gamma_1$ are always learned. Hence we use the term \textit{noise schedule} to refer to the interior shape $\tilde\gamma(t)$.
 
@@ -716,13 +711,12 @@ at a rate comparable to AR, MDLM, and Duo. The $\approx \replaidscx \times$ comp
 
 \section{Benchmarking RePlaid for Diffusion Language Models}\label{sec:small-models}
 
-The $0.1$B regime is the standard testbed for DLMs where the recent wave of continuous DLMs~\citep{lee2026flow, chen2026langflow, roos2026categorical, potaptchik2026discrete} is exclusively benchmarked. Having shown in~\cref{sec:scaling} that RePlaid scales on par with discrete DLMs, we now compare at this canonical scale against the strongest discrete (MDLM~\citep{sahoo2024simple}, Duo~\citep{sahoo2025the}) and continuous (FLM~\citep{lee2026flow} and concurrent work LangFlow~\citep{chen2026langflow}) DLMs along \emph{likelihood} (\cref{subsec:likelihood-eval}) and \emph{sample quality} (\cref{subsec:sampling}). Both are necessary: FLM does not propose a likelihood bound; in addition, recent works~\citep{sahoo2025the, sahoo2026scaling} have shown that better likelihood may not always lead to better sample quality. We do not compare against recent methods that utilize pre-trained contextual encoders (e.g..~\citep{hu2026elf, meshchaninov2026train}) -- the chosen encoder dictates the tokenizer and sequence-packing style.
+The $0.1$B regime is the standard testbed for DLMs where the recent wave of continuous DLMs~\citep{lee2026flow, chen2026langflow, roos2026categorical, potaptchik2026discrete} is exclusively benchmarked. Having shown in~\cref{sec:scaling} that RePlaid scales on par with discrete DLMs, we now compare at this canonical scale against the strongest discrete (MDLM~\citep{sahoo2024simple}, Duo~\citep{sahoo2025the}) and continuous (FLM~\citep{lee2026flow} and concurrent works LangFlow~\citep{chen2026langflow} and ELF~\citep{hu2026elf}) DLMs along \emph{likelihood} (\cref{subsec:likelihood-eval}) and \emph{sample quality} (\cref{subsec:sampling}). Both are necessary: FLM and ELF do not propose a likelihood bound; in addition, recent works~\citep{sahoo2025the, sahoo2026scaling} have shown that better likelihood may not always lead to better sample quality.
 
 \subsection{Likelihood Evaluation -- OpenWebText and LM1B}
 \label{subsec:likelihood-eval}
 
-\paragraph{Unified setup.} AR, MDLM, Duo, FLM, LangFlow, and RePlaid use the same transformer architecture used in~\cref{sec:scaling}. All methods share a comparable optimization setting (see \cref{tab:replaid-dit-optimization-small} for RePlaid) consistent with prior work at 0.1B, slightly different from the one used in \cref{sec:scaling}. Each method is trained for 1M steps with batch size $512$, taking \textasciitilde$110$ hours on 8 H200s. For original Plaid, we only set its layer count, hidden size, and learning rate schedule to be the same as other methods (\cref{tab:plaid-dit-optimization-small}).
-%
+\paragraph{Unified setup.} AR, MDLM, Duo, LangFlow, and RePlaid use the same transformer architecture used in~\cref{sec:scaling}. All methods share a comparable optimization setting (see \cref{tab:replaid-dit-optimization-small} for RePlaid) consistent with prior work at 0.1B, slightly different from the one used in \cref{sec:scaling}. Each method is trained for 1M steps with batch size $512$, taking \textasciitilde$110$ hours on 8 H200s. For original Plaid, we only set its layer count, hidden size, and learning rate schedule to be the same as other methods (\cref{tab:plaid-dit-optimization-small}). 
 
 \begin{findingbox}
     RePlaid achieves the best PPL bound $\mathbf{\replaidscppl}$ among considered DLMs on OpenWebText.
@@ -753,7 +747,7 @@ The $0.1$B regime is the standard testbed for DLMs where the recent wave of cont
 \begin{wraptable}{r}{0.38\linewidth}
     
     \centering
-    \caption{\small OWT Ablations for 1M steps.}
+    \caption{\small OWT ablations for 1M steps.}
     \label{tab:replaid-ablations}
     \vspace{-0.5em}
     \resizebox{\linewidth}{!}{%
@@ -870,25 +864,12 @@ The $0.1$B regime is the standard testbed for DLMs where the recent wave of cont
 
 \begin{figure*}[t]
     \centering
-    \begin{subfigure}{0.325\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/plaid_gen_ppl_vs_T.pdf}
-        \caption{GenPPL vs sampling steps}
-        \label{fig:genppl_vs_t}
-    \end{subfigure}
-    \begin{subfigure}{0.32\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/plaid_mauve_vs_T.pdf}
-        \caption{MAUVE vs sampling steps}
-        \label{fig:mauve_vs_T}
-    \end{subfigure}
-    \begin{subfigure}{0.32\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/plaid_gen_ppl_vs_entropy.pdf}
-        \caption{GenPPL--entropy frontier}
-        \label{fig:genppl_vs_entropy}
-    \end{subfigure}
-    \caption{ \small \textbf{(a-b)} GenPPL and MAUVE on OWT samples $(L=1024, N=5120)$. No temperature is used.  All models are trained for 1M steps on OWT. \textbf{(c)} GenPPL-entropy frontier as $T$ increases (darker color means higher $T$). We observe that Duo and FLM have worse entropy than RePlaid (no s.c.) at comparable GenPPL levels.}
+    \begin{subfigure}{0.3\linewidth}\phantomsubcaption\label{fig:sample-quality}\end{subfigure}%
+    \begin{subfigure}{0.3\linewidth}\phantomsubcaption\label{fig:mauve_vs_T}\end{subfigure}\\
+    \begin{subfigure}{0.3\linewidth}\phantomsubcaption\label{fig:genppl_vs_entropy}\end{subfigure}%
+    \includegraphics[width=1.0\linewidth]{figures/plaid_3panel_elf.pdf}
+    \caption{\small \textbf{RePlaid achieves superior unconditional generation quality.} We sample from 0.1B models trained for 1M on OWT ($L = 1024$,
+$N = 5120$, no temperature). \textbf{(a-b)} GenPPL and MAUVE. GenPPL does not capture diversity while MAUVE does as a distributional metric. \textbf{(c)} GenPPL-entropy frontier as $T$ increases. We observe that Duo, LangFlow, ELF, and FLM have worse entropy than RePlaid at comparable GenPPL levels.}
     \label{fig:sample-quality}
     \vspace{-1em}
 \end{figure*}
@@ -910,7 +891,9 @@ All solvers read out the final tokens as $\argmax$ of the decoder logits at $t \
 
 %
 
-\paragraph{Setup.} We apply these four samplers to sample unconditionally ($L=1024$) from RePlaid (s.c.) and (no s.c.) trained on OWT for 1M steps. No temperature is used. During sampling, we vary the number of diffusion discretization steps $T$ (not including the final $\argmax$) to control NFEs. For MDLM, Duo, FLM, and LangFlow, we use their official, publicly available 1M checkpoints. We measure Generative perplexity (GenPPL)~\citep{dieleman2022continuous} via GPT-2 Large~\citep{radford2019language}, MAUVE~\citep{pillutla2021mauve} via ModernBERT-Large~\citep{warner2025smarter} \zhihan{we release this package} for sample quality, and average unigram entropy for diversity~\citep{zheng2024masked}. GenPPL is the standard metric used in prior work~\citep{sahoo2024simple, sahoo2025the, lee2026flow, potaptchik2026discrete, chen2026langflow}. Unlike prior work, we also measure MAUVE, a metric designed to capture both quality and diversity that has been shown to correlate with human judgements~\citep{pillutla2021mauve}.
+FLM \zhihan{should we keep this? maybe mention only in sampling, together with ELF}
+
+\paragraph{Setup.} We apply these four samplers to sample unconditionally ($L=1024$) from RePlaid (s.c.) and (no s.c.) trained on OWT for 1M steps. No temperature is used. During sampling, we vary the number of diffusion discretization steps $T$ (not including the final $\argmax$) to control NFEs. For MDLM, Duo, FLM, and LangFlow, we use their official, publicly available 1M checkpoints. We measure Generative perplexity (GenPPL)~\citep{dieleman2022continuous} via GPT-2 Large~\citep{radford2019language}, MAUVE~\citep{pillutla2021mauve} via ModernBERT-Large~\citep{warner2025smarter} \zhihan{we release this package} for sample quality, and average unigram entropy for diversity~\citep{zheng2024masked}. GenPPL is the standard metric used in prior work~\citep{sahoo2024simple, sahoo2025the, lee2026flow, potaptchik2026discrete, chen2026langflow}. Unlike prior work, we also measure MAUVE, a distributional metric designed to capture both quality and diversity that has been shown to correlate with human judgements~\citep{pillutla2021mauve}.
 
 %
 
@@ -960,7 +943,7 @@ With a standard DDPM solver and a uniform $t$ discretization, \textbf{RePlaid (n
 
 \paragraph{Results.} \cref{fig:sample-quality} reports GenPPL (a) and MAUVE (b) versus sampling steps $T$ without temperature. On GenPPL (\cref{fig:genppl_vs_t}), we confirm the finding of~\citep{sahoo2025the} that Duo outperforms MDLM. Crucially, as $T$ increases, all continuous methods appear to match or outperform Duo, except for LangFlow (s.c. off). Among these, RePlaid (s.c.) takes the lead from $T=64$ and then reaches a GenPPL of $\approx21$ at $T = 1024$, significantly outperforming other continuous methods. 
 
-On MAUVE (\cref{fig:mauve_vs_T}), the conclusion holds similarly, except that (\textit{i}) RePlaid (no s.c.) outperforms Duo at every $T$, (\textit{ii}) FLM significantly underperforms other methods, and (\textit{iii}) RePlaid (s.c.) shows a decrease in quality at $T\in\{512, 1024\}$. To understand these issues, we plot GenPPL against entropy as $T$ is varied in~\cref{fig:genppl_vs_entropy} (darker color: higher $T$). We see that Duo and FLM have worse entropy than RePlaid (no s.c.) at comparable GenPPL levels. Meanwhile, RePlaid (s.c.) yields the lowest entropy among all methods at high $T$. We attribute this to the \textit{self-conditioning loop}: each sampling step feeds the model's previous reconstruction back as a conditioning signal, so additional steps compound the network's confidence and sharpen the sampling distribution below the reference entropy. While MAUVE accounts for both quality and diversity, to affirm our results we report GenPPL-entropy frontiers~\citep{pynadath2025candi} at each $T$ by sweeping temperatures (\cref{app:temp}). See~\cref{app:samples} for RePlaid text samples.
+On MAUVE (\cref{fig:mauve_vs_T}), the conclusion holds similarly, except that (\textit{i}) RePlaid (no s.c.) outperforms Duo at every $T$, (\textit{ii}) FLM significantly underperforms other methods, and (\textit{iii}) RePlaid (s.c.) shows a decrease in quality at $T\in\{512, 1024\}$. To understand these issues, we plot GenPPL against entropy as $T$ is varied in~\cref{fig:genppl_vs_entropy} (darker color: higher $T$). We see that Duo and FLM have worse entropy than RePlaid (no s.c.) at comparable GenPPL levels. Meanwhile, RePlaid (s.c.) yields the lowest entropy among all methods at high $T$. We attribute this to the \textit{self-conditioning loop}: each sampling step feeds the model's own prediction back as a conditioning signal, so additional steps compound the network's confidence and sharpen the sampling distribution below the reference entropy. While MAUVE accounts for both quality and diversity, to affirm our results we report GenPPL-entropy frontiers~\citep{pynadath2025candi} at each $T$ by sweeping temperatures (\cref{app:temp}). See~\cref{app:samples} for RePlaid text samples.
 
 %
 
@@ -979,7 +962,7 @@ On MAUVE (\cref{fig:mauve_vs_T}), the conclusion holds similarly, except that (\
     \begin{subfigure}{0.4\linewidth}
         \centering
         \includegraphics[width=\linewidth]{figures/plaid_mauve_vs_T_samplers_sc.pdf}
-        \caption{Self-conditioning}
+        \caption{Self-conditioning \zhihan{update self cond numbers, and elf}}
         \label{fig:mauve_vs_T_2nd_sc}
     \end{subfigure}
     \begin{subfigure}{0.4\linewidth}
@@ -1011,8 +994,8 @@ We show that score temperature is a special case of Temporal Score Rescaling (TS
 where $k$ controls the strength of sharpening (higher $k$: more sharpening) and $w$ controls its onset (higher $w$: start sharpening earlier). As $w \rightarrow \infty$, we have $ r_t(k, w) \rightarrow k$, so TSR becomes $\tilde\beps_\theta = k\,\beps_\theta$, which is no longer time-dependent. This exactly recovers score temperature with $\tau = 1/k$ (\cref{fig:tsr-density}).
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{figures/pfode_temp_panel.pdf}
-    \caption{\small \textbf{Score temperature is the time-independent limit of TSR.} PF-ODE transporting a Gaussian prior (left) to a 3-mode target (right). \textbf{(a)} The plain PF-ODE recovers the target exactly. \textbf{(b)} Applying TSR with $k>1$ leads to mode sharpening, but all modes are covered as long as $w=1$. \textbf{(c)} Starting to sharpen earlier ($w>1$) causes modes to be gradually dropped. \textbf{(d)} In the limit of $w\rightarrow \infty$, we recover score temperature scaling.}
+    \includegraphics[width=\linewidth]{figures/pfode_temp_panel_k3.pdf}
+    \caption{\small \textbf{Score temperature is the time-independent limit of TSR.} PF-ODE transporting a Gaussian prior (left) to a 5-mode target (right). \textbf{(a)} The plain PF-ODE recovers the target exactly. \textbf{(b)} Applying TSR with $k>1$ leads to mode sharpening, but all modes are covered as long as $w=1$. \textbf{(c)} Starting to sharpen earlier ($w>1$) causes smaller modes to be gradually dropped. \textbf{(d)} In the limit of $w\rightarrow \infty$, we recover score temperature scaling.}
     \label{fig:tsr-density}
     \vspace{-1em}
 \end{figure*}
@@ -1028,20 +1011,21 @@ where $k$ controls the strength of sharpening (higher $k$: more sharpening) and 
 \begin{table}[h]
   \centering
   \small
-  \caption{\small \textbf{Mathematical reasoning}. We prompt 0.1B models trained for 250K steps on TinyGSM~\citep{liu2023tinygsm} using the GSM8K~\citep{cobbe2021gsm8k} test set. We use $\text{max response length}=512 - \text{prompt length}$ and pass@1. The AR, MDLM, Duo, and FLM numbers are obtained from the official checkpoints of concurrent work \citet{deschenaux2026language}. The code responses are evaluated by a Python interpreter. Diffusion uses ancestral sampling with $T=1024$. Logit temperature: dividing the logits of $\x_\theta(\z_t, t)$ by $\tau$ before the softmax; score temperature: rescaling the predicted noise $\beps_\theta(\z_t, t)$ (equivalently the diffusion score) by $1/\tau$, following~\citet{dieleman2022continuous}. For both, $\tau<1$ sharpens. ``s.c.'' indicates self-conditioning (used during both training and evaluation). ``N.A.'' marks entries that are not applicable (methods without a score interface, or sampler configurations we do not evaluate). The five best values across all methods (excluding AR) are \textbf{shaded}, from darkest (best) to lightest.}
+  \caption{\small \textbf{Mathematical reasoning}. We train 0.1B models for 250K steps on TinyGSM~\citep{liu2023tinygsm} and prompt them using the GSM8K~\citep{cobbe2021gsm8k} test set. We use \texttt{pass@1} and $\text{max response length}=512 - \text{prompt length}$. The AR, MDLM, Duo, and FLM numbers are obtained from the official checkpoints of concurrent work \citet{deschenaux2026language}. The code responses are evaluated by a Python interpreter. Diffusion uses ancestral sampling with $T=1024$. Logit temperature: dividing the logits of $\x_\theta(\z_t, t)$ by $\tau$ before the softmax; score temperature: rescaling the predicted noise $\beps_\theta(\z_t, t)$ (equivalently the diffusion score) by $1/\tau$, following~\citet{dieleman2022continuous}. For both, $\tau<1$ sharpens. ``s.c.'' indicates self-conditioning (used during both training and evaluation). ``N.A.'' marks entries that are not applicable (methods without a score interface, or sampler configurations we do not evaluate). The five best values across all methods (excluding AR) are \textbf{shaded}, from darkest (best) to lightest.}
+  \vspace{0.5em}
   \label{tab:tinygsm}
    \scriptsize
-  \begin{tabular}{llcccccc}
+  \begin{tabular}{llccccccc}
     \toprule
-    & & & \multicolumn{3}{c}{\textit{Ancestral Sampler}} & \multicolumn{2}{c}{\textit{Adaptive-order Sampler}} \\
-    \cmidrule(lr){4-6} \cmidrule(lr){7-8}
-    & Method & s.c. & No Temp. & Best Logit Temp. & Best Score Temp. & Conf. Threshold & Top Margin \\
+    & & & \multicolumn{3}{c}{Ancestral Sampler ($T=1024$)} & \multicolumn{3}{c}{Adaptive-Order Samplers} \\
+    \cmidrule(lr){4-6} \cmidrule(lr){7-9}
+    & Method & s.c. & No Temp. & Best $\tau_\text{logit}$ & Best $\tau_\text{score}$ & Conf. Thres. & Top Margin & Ent. Bound \\
     \midrule
     \multicolumn{3}{l}{\textit{Autoregressive}} \\
     & Transformer & & $52.9$ & $64.4$ ($0.2$) & N.A. & N.A. & N.A. \\
     \midrule
     \multicolumn{3}{l}{\textit{Discrete Diffusion}} \\
-    & MDLM~\citep{sahoo2024simple} & & $17.0$ & $35.6$ ($0.1$) & N.A. & $37.0$ ($0.8$) & \rankthree{$\mathbf{40.3}$} \\
+    & MDLM~\citep{sahoo2024simple} & & $17.0$ & $35.6$ ($0.1$) & N.A. & $37.0$ ($0.8$) & \rankthree{$\mathbf{40.3}$} & $23.0$ ($0.0$) \\
     & Duo~\citep{sahoo2025the} & & $18.6$ & $37.2$ ($0.1$) & N.A. & N.A. & N.A. \\
     \midrule
     \multicolumn{3}{l}{\textit{Continuous Diffusion}} \\
